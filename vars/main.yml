@@ -1,0 +1,12 @@
+---
+#
+# vars file for gym-system-cloud
+#
+my_region: us-east-1
+instance_t: t2.micro
+s_key: mysg-nvg
+my_image: ami-0b69ea66ff7391e80 
+my_sg: ASGSG
+my_sub: subnet-49a88615
+pub_ip: yes
+i_tag: gym_system

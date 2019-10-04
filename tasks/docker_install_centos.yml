@@ -1,0 +1,62 @@
+---
+- name: "add docker repository"
+  get_url: 
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+    mode: 0644
+  
+- name: Install prerequisite on RedHat family
+  yum: 
+    name: "{{ item }}"
+    state: latest
+  when: ansible_os_family == "RedHat"
+  with_items: 
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: Install prerequisite on Debian family
+  apt: 
+    name: "{{ item }}"
+    state: latest
+  when: ansible_os_family == "Debian"
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+
+- name: Install Docker on Redhat family
+  yum: name={{ item }} state=present
+  when: ansible_os_family == "RedHat"
+  retries: 3
+  delay: 20
+  with_items: 
+    - docker-ce
+    - docker-python
+
+- name: Install Docker on Debian family
+  apt: 
+    name: "{{ item }}"
+    state: latest
+  when: ansible_os_family == "RedHat"
+  retries: 3
+  delay: 10
+  with_items: 
+    - docker-ce
+    - docker-python
+
+- name: "add docker group"
+  group: name=docker state=present
+
+- name: "Add CentOs user to Docker group"
+  user: name=docker group=docker append=yes
+
+- name: Start Docker service
+  service: name=docker state=started
+ 
+- name: "Get Docker info"
+  shell: docker info
+  
+
+

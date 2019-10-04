@@ -1,0 +1,65 @@
+---
+- name: Login into Docker hub registry
+  docker_login: 
+    email: bmahajan0@gmail.com
+    username: "{{ docker_user }}" 
+    password: "{{ doc_pass }}"
+    
+- name: Launch Docker containers App1
+  docker_container: 
+    name: app1
+    state: started
+    image: "bmahajan/lb:app2new"
+    tty: yes
+    detach: yes
+    pull: yes
+    ports: 
+      - "8081:80"
+    
+- name: name to home page
+  shell: docker exec app1 sed -i '5i\<li>App1</li>\ ' /opt/lampp/htdocs/includes/footer.php
+  
+- name: Launch Docker containers App2
+  docker_container:
+    name: app2
+    state: started
+    image: "bmahajan/lb:app2new"
+    tty: yes
+    detach: yes
+    pull: yes
+    ports:
+      - "8081:80"
+
+
+- name: Name to home page 
+  shell: docker exec app2 sed -i '5i\<li>App2</li>\ ' /opt/lampp/htdocs/includes/footer.php 
+
+
+- name: Starting all services of containers manually
+  command: docker exec "{{ item }}" /opt/lampp/lampp start
+  with_items: 
+    - app1
+    - app2
+  ignore_errors: yes
+
+- name: launch container Nginx
+  docker_container: 
+    name: nginx
+    state: started
+    image: "bmahajan/lb:nginx"
+    tty: yes
+    detach: yes
+    pull: yes
+    ports: 
+      - "80:80"
+
+- name: check existing IP in nginx conf file
+  shell: docker exec nginx grep [0-9] /etc/nginx/nginx.conf | head -2 | tail -1 | awk -F ":" '{print $1}'| awk -F " " '{print $2}'
+  register: ext_ip
+- debug: 
+    var: ext_ip
+
+- name: Configure Nginx
+  shell: docker exec nginx sed  -i -e 's/{{ item }}\b/{{ hip }}/g' /etc/nginx/nginx.conf
+  with_items:
+    - "{{ ext_ip.stdout }}"

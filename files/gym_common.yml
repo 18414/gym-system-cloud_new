@@ -1,0 +1,9 @@
+---
+- name: Provision EC2 instance and launch Docker container
+  become: true
+  hosts: localhost
+  vars_files:
+    - /home/ansible/gym-system-cloud_new/files/doc_pas.yml
+  roles:
+    - gym-system-cloud_new
+  
