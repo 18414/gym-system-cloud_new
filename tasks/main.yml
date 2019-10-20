@@ -2,13 +2,13 @@
 # tasks file for gym-system-cloud
 - name: Provison EC2 instance
   include: ec2_provision.yml  
-  delagete_to: localhost
+  delegate_to: localhost
   
 - name: Install Docker 
   include: docker_install_centos.yml
-  delagete_to: "{{ ec2.instances.public_ip }}" 
+  delegate_to: "{{ ec2.instances.public_ip }}" 
 
 - name: Launch containers
   include: docker_containers_launch.yml
-  delagete_to: "{{ ec2.instances.public_ip }}"
+  delegate_to: "{{ ec2.instances.public_ip }}"
 
