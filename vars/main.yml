@@ -1,12 +1,11 @@
 ---
+# vars file for aws-infra-provision
 #
-# vars file for gym-system-cloud
-#
-my_region: us-east-1
-instance_t: t2.micro
-s_key: mysg-nvg
-my_image: ami-0b69ea66ff7391e80 
-my_sg: ASGSG
-my_sub: subnet-49a88615
-pub_ip: yes
-i_tag: gym_system
+#default_vpc_subnet: subnet-8b371aec # us-east-1a
+default_vpc_subnet: subnet-49a88615 # us-east-1d
+BASE_AMI: ami-0b69ea66ff7391e80 # Amazon Linux
+AWS_ZONE: us-east-1a
+GRP_NAME: ASGSG
+KEY_NAME: mysg-nvg
+INSTANCE: t2.medium
+

@@ -3,14 +3,14 @@
   ec2: 
     aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
     aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
-    ec2_region: "{{ AWS_REGION }}"
-    instance_type: "{{ instance_t }}"
-    key_name: "{{ s_key }}"
-    image: "{{ my_image }}"
+    instance_type: "{{ INSTANCE }}"
+    key_name: "{{ KEY_NAME }}"
+    image: "{{ BASE_AMI }}"
     user_data: "{{ lookup('file', '/home/ansible/ansible/playbooks/ans_env.sh')}}"
-    group: "{{ my_sg }}"
-    vpc_subnet_id: "{{ my_sub }}"
+    ec2_region: "{{ AWS_REGION }}"
     assign_public_ip: yes
+    group: "{{ GRP_NAME }}"
+    vpc_subnet_id: "{{ default_vpc_subnet }}"
     wait: yes   
     count_tag: 
       application: Gym-management_system
